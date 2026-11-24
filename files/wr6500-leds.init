@@ -1,0 +1,43 @@
+#!/bin/sh /etc/rc.common
+# SPDX-License-Identifier: GPL-2.0-only
+# Names match 96766SV1.dts. All of these LEDs are active-low.
+START=96
+
+set_off() {
+	echo none > "/sys/class/leds/$1/trigger"
+	echo 0 > "/sys/class/leds/$1/brightness"
+}
+
+bind_traffic() {
+	echo netdev > "/sys/class/leds/$1/trigger"
+	echo "$2" > "/sys/class/leds/$1/device_name"
+	echo 1 > "/sys/class/leds/$1/link"
+	echo 1 > "/sys/class/leds/$1/tx"
+	echo 1 > "/sys/class/leds/$1/rx"
+}
+
+start() {
+	bind_traffic oem:green:lan1 eth4
+	bind_traffic oem:green:lan2 eth3
+	bind_traffic oem:green:lan3 eth2
+	bind_traffic oem:green:lan4 eth1
+	bind_traffic oem:green:wan eth0
+
+	echo netdev > /sys/class/leds/oem:green:internet/trigger
+	echo eth0 > /sys/class/leds/oem:green:internet/device_name
+	echo 1 > /sys/class/leds/oem:green:internet/link
+	echo 0 > /sys/class/leds/oem:green:internet/tx
+	echo 0 > /sys/class/leds/oem:green:internet/rx
+
+	echo none > /sys/class/leds/oem:red:internet/trigger
+	if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" = 1 ]; then
+		echo 0 > /sys/class/leds/oem:red:internet/brightness
+	else
+		echo 255 > /sys/class/leds/oem:red:internet/brightness
+	fi
+
+	echo heartbeat > /sys/class/leds/oem:green:status/trigger
+	set_off oem:green:wan2
+	set_off oem:green:wifi
+	set_off oem:green:wps
+}

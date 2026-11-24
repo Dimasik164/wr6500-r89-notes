@@ -1,0 +1,41 @@
+#!/bin/sh
+echo "WR6500 enet loader start" > /dev/console
+mkdir -p /data/licenses
+
+kver=$(uname -r)
+moddir="/lib/modules/${kver}"
+insmod_bin=/sbin/insmod
+[ -x "$insmod_bin" ] || insmod_bin=insmod
+
+load_mod() {
+    name=$1
+    shift
+    ko="${moddir}/${name}.ko"
+    if [ ! -f "$ko" ]; then
+        echo "WR6500 missing ${name}.ko" > /dev/console
+        return 0
+    fi
+    if "$insmod_bin" "$ko" "$@" > /dev/console 2>&1; then
+        echo "WR6500 insmod ${name} ok" > /dev/console
+    else
+        echo "WR6500 insmod ${name} failed" > /dev/console
+    fi
+}
+
+load_mod bcmlibs
+load_mod bcm_knvram
+load_mod bcm_mpm
+load_mod cmdlist
+load_mod pktflow
+load_mod bcm_bpm
+load_mod bcmvlan DSCP2Pbits_Use3LSBs=0
+load_mod bcm_bp3drv modparam_license_dir=/data/licenses
+load_mod bcm_archer_gpl
+load_mod archer
+load_mod gdx
+load_mod bcm_enet
+load_mod bcmmcast
+
+echo "WR6500 enet loader done" > /dev/console
+exit 0
+

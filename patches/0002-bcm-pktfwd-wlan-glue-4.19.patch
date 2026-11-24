@@ -1,0 +1,36 @@
+--- a/bcmdrivers/opensource/char/bcmlibs/impl1/bcm_pktfwd.c
++++ b/bcmdrivers/opensource/char/bcmlibs/impl1/bcm_pktfwd.c
+@@ -121,6 +121,7 @@
+     }
+ 
+     bcm_pktfwd->d3lut = d3lut;
++    bcm_pktfwd->initialized = true;
+ 
+     PKTFWD_TRACE(" System Constructed");
+ 
+@@ -224,6 +225,7 @@
+     pktlist_table_t   * pktlist_table   = PKTLIST_TABLE_NULL;
+     pktlist_context_t * pktlist_context = PKTLIST_CONTEXT_NULL;
+ 
++    pr_err("wlan_glue pktlist init %s unit %u\n", driver_name ? driver_name : "?", unit);
+     PKTLIST_TRACE("%s pktlist_context_init", driver_name);
+ 
+     /* Assert Initialization Params */
+@@ -238,7 +240,7 @@
+     PKTLIST_TRACE("%s pktlist_context_t size %u",
+         driver_name, (uint32_t)sizeof(pktlist_context_t));
+ 
+-    pktlist_context = kmalloc(sizeof(pktlist_context_t), GFP_ATOMIC);
++    pktlist_context = kmalloc(sizeof(pktlist_context_t), GFP_KERNEL);
+     if (pktlist_context == PKTLIST_CONTEXT_NULL) {
+         PKTLIST_ERROR("%s pktlist_context_t kmalloc %u failure",
+             driver_name, (uint32_t)sizeof(pktlist_context_t));
+@@ -251,7 +253,7 @@
+     PKTLIST_TRACE("%s pktlist_table_t size %u",
+         driver_name, (uint32_t) sizeof(pktlist_table_t));
+ 
+-    pktlist_table = kmalloc(sizeof(pktlist_table_t), GFP_ATOMIC);
++    pktlist_table = kmalloc(sizeof(pktlist_table_t), GFP_KERNEL);
+     if (pktlist_table == PKTLIST_TABLE_NULL) {
+         kfree(pktlist_context);
+         pktlist_context = PKTLIST_CONTEXT_NULL;

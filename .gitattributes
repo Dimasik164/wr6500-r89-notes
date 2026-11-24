@@ -1,0 +1,4 @@
+* text=auto eol=lf
+files/bcm_boot_launcher text eol=lf
+files/*.init text eol=lf
+files/rc.button/* text eol=lf

@@ -1,0 +1,37 @@
+--- a/package/extra/bcm/src/kernel/linux-4.19/drivers/mtd/nand/spi/broadcom.c
++++ b/package/extra/bcm/src/kernel/linux-4.19/drivers/mtd/nand/spi/broadcom.c
+@@ -1254,6 +1254,18 @@ static const struct spinand_info esmt_spinand_table[] = {
+ 	/* ESMT F50L4G41X same as Micron MT29F4G01AB */
+ };
+ 
++/* WR6500 F50L1G41LC: READID returns 8c 2c 8c 2c. Geometry matches F50L1G41LB. */
++static const struct spinand_info esmt_8c_spinand_table[] = {
++	SPINAND_INFO("F50L1G41LC", 0x2c,
++		     NAND_MEMORG(1, 2048, 64, 64, 1024, 1, 1, 1),
++		     NAND_ECCREQ(1, 512),
++		     SPINAND_INFO_OP_VARIANTS(&x1_read_cache_variants,
++					      &x1_write_cache_variants,
++					      &x1_update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&esmt2_ooblayout, NULL)),
++};
++
+ ///////////////////////////////////// etron device data /////////////////////////////////////
+ 
+ // for uboot we can't support Etron 8 bit ECC devices, the problem is they only have 4 status states when reading a page,
+@@ -1497,6 +1509,15 @@ static int spinand_detect(struct spinand_device *spinand)
+ 		}
+ 	}
+ 
++	else if (id[0] == 0x8c)
++	{
++		if (!(ret = spinand_match_and_init(spinand, esmt_8c_spinand_table, ARRAY_SIZE(esmt_8c_spinand_table), id[1])))
++		{
++			printk("ESMT2");
++			spinand_report(esmt_8c_spinand_table, ARRAY_SIZE(esmt_8c_spinand_table), id[1]);
++		}
++	}
++
+ 	if (ret)
+ 	{
+ 		printk("SPI NAND NOT FOUND!!!!!\n");

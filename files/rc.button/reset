@@ -1,0 +1,17 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# gpio-keys-polled via gpio_button_hotplug.
+# Reset is gpioc 18, active-low. WPS is gpioc 30, active-low.
+# A pressed event returns 5 so procd waits five seconds.
+# A short press does nothing. Five seconds erases the overlay and reboots.
+
+if [ "$ACTION" = "pressed" ]; then
+	exit 5
+fi
+
+if [ "$SEEN" -ge 5 ]; then
+	jffs2reset -y
+	reboot
+fi
+
+exit 0
