@@ -1,0 +1,11 @@
+--- a/tools/quilt/Makefile
++++ b/tools/quilt/Makefile
+@@ -15,6 +15,7 @@ include $(INCLUDE_DIR)/host-build.mk
+ 
+ define Host/Configure
+-	cd $(HOST_BUILD_DIR) && autoconf
++	# WR6500 quilt host-tool PATH fix: avoid the Broadcom cross-SDK autoconf.
++	cd $(HOST_BUILD_DIR) && PATH="$(STAGING_DIR_HOST)/bin:$(PATH)" autoconf
+ 	$(call Host/Configure/Default)
+ 	[ -f $(HOST_BUILD_DIR)/Makefile ]
+ endef

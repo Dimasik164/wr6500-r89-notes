@@ -1,0 +1,13 @@
+--- a/package/libs/libpcap/Makefile
++++ b/package/libs/libpcap/Makefile
+@@ -48,6 +48,10 @@ endif
+ 
+ CMAKE_OPTIONS += \
+ 	-DBUILD_SHARED_LIBS=ON \
++	-DYACC_EXECUTABLE=$(STAGING_DIR_HOST)/bin/bison \
++	-DLEX_EXECUTABLE=$(STAGING_DIR_HOST)/bin/flex \
+ 	-DBUILD_WITH_LIBNL=OFF \
+ 
++# WR6500 libpcap host-tool fix: avoid the vendor bison needing libreadline.so.6.
++
+ # grep 'option(DISABLE_' CMakeLists.txt | cut -f2 -d'(' | cut -f1 -d' ' | sort --unique

@@ -1,0 +1,12 @@
+--- a/tools/oem-sign/Makefile
++++ b/tools/oem-sign/Makefile
+@@ -17,7 +17,8 @@ define Host/Prepare
+ endef
+ 
+ define Host/Compile
+-	$(MAKE) -C $(HOST_BUILD_DIR) LDFLAGS="$(HOST_STATIC_LINKING) -lcrypto -lssl"
++	# WR6500 OpenSSL 3 host fix: deprecated APIs remain valid for this legacy tool.
++	$(MAKE) -C $(HOST_BUILD_DIR) WFLAGS="-Wall" LDFLAGS="$(HOST_STATIC_LINKING) -lcrypto -lssl"
+ endef
+ 
+ define Host/Configure

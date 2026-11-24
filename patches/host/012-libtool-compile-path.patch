@@ -1,0 +1,13 @@
+--- a/tools/libtool/Makefile
++++ b/tools/libtool/Makefile
+@@ -19,6 +19,10 @@ include $(INCLUDE_DIR)/host-build.mk
+ HOST_CONFIGURE_VARS += \
+ 	lt_cv_sys_dlsearch_path=""
+ 
++# WR6500 libtool compile PATH fix: generated make rules invoke autom4te.
++HOST_MAKE_VARS += \
++	PATH="$(STAGING_DIR_HOST)/bin:$(PATH)"
++
+ define Host/Prepare
+ 	$(call Host/Prepare/Default)
+ 	(cd $(STAGING_DIR_HOST)/share/aclocal/ && rm -f libtool.m4 ltdl.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4)

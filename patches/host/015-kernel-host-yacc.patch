@@ -1,0 +1,18 @@
+--- a/target/linux/brcmbca/Makefile
++++ b/target/linux/brcmbca/Makefile
+@@ -83,9 +83,13 @@ ifneq ($(strip $(CONFIG_EXTERNAL_KERNEL_TREE)),"")
+ 
+ 
+     define Kernel/Configure
+-		$(MAKE) -f $(BCM_TARGET_PATH)/build/pre_kernelbuild.mk BCM_TARGET_PATH=$(BCM_TARGET_PATH) BCM_PROFILE=$(CONFIG_BCM_PROFILE) LINUX_DIR=$(LINUX_DIR) BUILD_DIR=$(BUILD_DIR)
++		# WR6500 kernel host-tool fix: the bundled SDK bison requires the
++		# obsolete libreadline.so.6. Use the already-built OpenWrt host tools.
++		$(MAKE) -f $(BCM_TARGET_PATH)/build/pre_kernelbuild.mk BCM_TARGET_PATH=$(BCM_TARGET_PATH) BCM_PROFILE=$(CONFIG_BCM_PROFILE) LINUX_DIR=$(LINUX_DIR) BUILD_DIR=$(BUILD_DIR) \
++			YACC=$(STAGING_DIR_HOST)/bin/bison LEX=$(STAGING_DIR_HOST)/bin/flex
+ 
+-		$(MAKE) -f $(BCM_TARGET_PATH)/build/Bcmkernel.mk prepare_bcm_driver BCM_TARGET_PATH=$(BCM_TARGET_PATH) BCM_PROFILE=$(CONFIG_BCM_PROFILE) LINUX_DIR=$(LINUX_DIR) BUILD_DIR=$(BUILD_DIR)
++		$(MAKE) -f $(BCM_TARGET_PATH)/build/Bcmkernel.mk prepare_bcm_driver BCM_TARGET_PATH=$(BCM_TARGET_PATH) BCM_PROFILE=$(CONFIG_BCM_PROFILE) LINUX_DIR=$(LINUX_DIR) BUILD_DIR=$(BUILD_DIR) \
++			YACC=$(STAGING_DIR_HOST)/bin/bison LEX=$(STAGING_DIR_HOST)/bin/flex
+ 
+ 		$(call Kernel/Configure/Default)
+     endef

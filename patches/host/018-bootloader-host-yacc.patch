@@ -1,0 +1,22 @@
+--- a/package/extra/bcm/feeds/bootloader/Makefile
++++ b/package/extra/bcm/feeds/bootloader/Makefile
+@@ -43,12 +43,16 @@ define Build/Compile
+ 	make -C $(PKG_BUILD_DIR)/hostTools hosttools_common
+ 	make -C $(PKG_BUILD_DIR)/hostTools hosttools_bootloader
+-	make -f $(BCM_TARGET_PATH)/build/make.uboot all INCLUDE_OPTEE= INCLUDE_ATF=y IMAGE_GOAL=
++	# WR6500 bootloader host-tool fix: the SDK's bundled bison links against
++	# obsolete libreadline.so.6.  Pass OpenWrt's staged host tools through the
++	# nested vendor makefiles and into U-Boot's Kbuild.
++	make -f $(BCM_TARGET_PATH)/build/make.uboot all INCLUDE_OPTEE= INCLUDE_ATF=y IMAGE_GOAL= \
++		YACC=$(STAGING_DIR_HOST)/bin/bison LEX=$(STAGING_DIR_HOST)/bin/flex
+ 
+-	make -f $(BCM_TARGET_PATH)/build/make.uboot atf-build
++	make -f $(BCM_TARGET_PATH)/build/make.uboot atf-build YACC=$(STAGING_DIR_HOST)/bin/bison LEX=$(STAGING_DIR_HOST)/bin/flex
+ 	echo "Compressing ARM Trusted Firmware using lzma"
+ 	$(PKG_BUILD_DIR)/hostTools/cmplzma -k -2 -lzma $(PKG_BUILD_DIR)/bootloaders/armtf/armtf.elf $(PKG_BUILD_DIR)/bootloaders/armtf/armtf.bin $(PKG_BUILD_DIR)/bootloaders/armtf/armtf.lz
+ 
+-	make -f $(BCM_TARGET_PATH)/build/make.uboot loader-build
++	make -f $(BCM_TARGET_PATH)/build/make.uboot loader-build YACC=$(STAGING_DIR_HOST)/bin/bison LEX=$(STAGING_DIR_HOST)/bin/flex
+ endef
+ 
+ define Package/$(PKG_NAME)/install

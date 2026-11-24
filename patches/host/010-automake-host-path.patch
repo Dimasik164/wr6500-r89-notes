@@ -1,0 +1,11 @@
+--- a/tools/automake/Makefile
++++ b/tools/automake/Makefile
+@@ -18,6 +18,8 @@ HOST_CONFIGURE_ARGS += \
+ 	--disable-silent-rules
+ 
++# WR6500 host-tool PATH fix: do not use Broadcom cross-SDK host scripts.
+ HOST_CONFIGURE_VARS += \
++	PATH="$(STAGING_DIR_HOST)/bin:$(PATH)" \
+ 	PERL="/usr/bin/env perl" \
+ 	am_cv_prog_PERL_ithreads=no
+ 

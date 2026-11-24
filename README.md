@@ -15,10 +15,12 @@ This repository is a small, reviewable source catalog for the **Cudy WR6500 EU1.
 
 - `patches/0001-bcm6766-spinand-f50l1g41lc-4.19.patch` — vendor Linux 4.19 SPI-NAND ID patch.
 - `patches/0002-bcm-pktfwd-wlan-glue-4.19.patch` — local pktfwd changes used by the glue module.
+- `patches/host/010` through `019` — build-host compatibility fixes for automake, libtool, yacc, and OpenSSL 3; they do not change the target device.
 - `files/bcm_boot_launcher` — vendor-tree Ethernet module loader.
 - `files/wifi/` — GPL glue, guards, transmit-queue workaround, and out-of-tree Makefile.
 - `files/wr6500-leds.init` and `files/rc.button/reset` — observed LED mapping and long-press reset handlers.
 - `docs/partition-map.md` — measured stock MTD and UBI layout.
+- `docs/prototype-status.md` — concise status and limitations of the tested laboratory prototype.
 - `docs/repeat-ram-boot.md` — high-level RAM-only reproduction path.
 - `docs/wifi-bringup.md` — exact limitations and bench evidence for the radio prototype.
 - `docs/board-ports.md` — observed Ethernet, LED, and button mapping.

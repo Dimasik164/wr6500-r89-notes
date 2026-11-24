@@ -1,0 +1,14 @@
+--- a/target/linux/brcmbca/Makefile
++++ b/target/linux/brcmbca/Makefile
+@@ -20,6 +20,11 @@ include $(INCLUDE_DIR)/target.mk
+ 
+ KERNELNAME:=zImage dtbs Image
+ 
++# WR6500 kernel make host-tool fix: use OpenWrt host parsers in every kernel
++# invocation, not only the Broadcom pre-configuration stage.
++KERNEL_MAKE_FLAGS += YACC=$(STAGING_DIR_HOST)/bin/bison
++KERNEL_MAKE_FLAGS += LEX=$(STAGING_DIR_HOST)/bin/flex
++
+ export IMAGE_DIR=$(PLATFORM_DIR)/image
+ export BIN_PROFILE_DIR=$(BIN_DIR)
+ 

@@ -1,0 +1,11 @@
+--- a/tools/libtool/Makefile
++++ b/tools/libtool/Makefile
+@@ -24,6 +24,7 @@ define Host/Prepare
+ 	$(call Host/Prepare/Default)
+ 	(cd $(STAGING_DIR_HOST)/share/aclocal/ && rm -f libtool.m4 ltdl.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4)
+-	(cd $(HOST_BUILD_DIR); $(AM_TOOL_PATHS) ./bootstrap)
++	# WR6500 host-tool PATH fix: do not use Broadcom cross-SDK host scripts.
++	(cd $(HOST_BUILD_DIR); PATH="$(STAGING_DIR_HOST)/bin:$(PATH)" $(AM_TOOL_PATHS) ./bootstrap)
+ endef
+ 
+ define Host/Install
